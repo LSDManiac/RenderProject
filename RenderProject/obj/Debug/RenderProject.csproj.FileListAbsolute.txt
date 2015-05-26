@@ -1,0 +1,12 @@
+E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe.config
+E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe
+E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.pdb
+E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.csprojResolveAssemblyReference.cache
+E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.exe
+E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.pdb
+E:\Projects\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe.config
+E:\Projects\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.exe
+E:\Projects\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.pdb
+E:\Projects\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe
+E:\Projects\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.pdb
+E:\Projects\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.csprojResolveAssemblyReference.cache

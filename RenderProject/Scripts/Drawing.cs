@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using RenderProject.MyMath;
 
 namespace RenderProject
 {
     public static class Drawing
     {
 
-        /// <summary>
-        /// Swaps two int vars
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
         public static void Swap(ref int a, ref int b)
         {
             int temp = a;
@@ -19,48 +15,41 @@ namespace RenderProject
             b = temp;
         }
 
-        /// <summary>
-        /// Draws line on given Bitmap
-        /// </summary>
-        /// <param name="x0">Point 1 x</param>
-        /// <param name="y0">Point 1 y</param>
-        /// <param name="x1">Point 2 x</param>
-        /// <param name="y1">Point 2 y</param>
-        /// <param name="image"></param>
-        /// <param name="color">Color of the line</param>
-        public static void Line(int x0, int y0, int x1, int y1, Bitmap image, Color color)
+        public static void Line(Vector3 p0, Vector3 p1, Bitmap image, Color color, Dictionary<Vector2i, int> zBuffer)
         {
+            Vector2i p0i = p0;
+            Vector2i p1i = p1;
             // Takes distances between point
-            int dx = Math.Abs(x1 - x0);
-            int dy = Math.Abs(y1 - y0);
+            int dx = Math.Abs(p1i.x - p0i.x);
+            int dy = Math.Abs(p1i.y - p0i.y);
 
             // Swap stats firstly needed to make line go from zero to I quadrant
             // Secondly swap needed to make line go on tan < 1 (it's eaier to drow line this way)
             bool swapped = false;
             if (dx < dy)
             {
-                Swap(ref x0, ref y0);
-                Swap(ref x1, ref y1);
+                Swap(ref p0i.x, ref p0i.y);
+                Swap(ref p1i.x, ref p1i.y);
                 swapped = true;
             }
 
-            if (x0 > x1)
+            if (p0i.x > p1i.x)
             {
-                Swap(ref x0, ref x1);
-                Swap(ref y0, ref y1);
+                Swap(ref p0i.x, ref p1i.x);
+                Swap(ref p0i.y, ref p1i.y);
             }
 
 
             // Recounting distances and creating shifts and steps variable
-            dx = Math.Abs(x1 - x0);
-            dy = Math.Abs(y1 - y0);
+            dx = Math.Abs(p1i.x - p0i.x);
+            dy = Math.Abs(p1i.y - p0i.y);
             int shift = 0;
             int step = 2*dy;
-            int y = y0;
+            int y = p0i.y;
 
             // Main idea of this method not to count trigonometry
             // But to count incrementing of y param in int
-            for (int x = x0; x <= x1; x++)
+            for (int x = p0i.x; x <= p1i.x; x++)
             {
                 if (swapped)
                 {
@@ -82,69 +71,49 @@ namespace RenderProject
                 if (shift >= dx)
                 {
                     shift -= 2*dx;
-                    y += (y0 > y1 ? -1 : 1);
+                    y += (p0i.y > p1i.y ? -1 : 1);
                 }
             }
         }
 
-        /// <summary>
-        /// Draws polygon
-        /// </summary>
-        /// <param name="points">Points of polygon</param>
-        /// <param name="image"></param>
-        /// <param name="color">Color of polygon</param>
-        public static void Polygon(List<KeyValuePair<int, int>> points, Bitmap image, Color color)
+        public static void Polygon(List<Vector3i> points, Bitmap image, Color color, Dictionary<int, int> zBuffer)
         {
             // Splits polygon into triangles
             for (int i = 2; i < points.Count; i++)
             {
-                Triangle(points[0].Key, points[0].Value,
-                    points[i - 1].Key, points[i - 1].Value,
-                    points[i].Key, points[i].Value,
-                    image, color);
+                Triangle(points[0], points[i - 1], points[i], image, color, zBuffer);
             }
         }
 
-        /// <summary>
-        /// Draws triangle on given Bitmap
-        /// </summary>
-        /// <param name="x0">Point 1 x</param>
-        /// <param name="y0">Point 1 y</param>
-        /// <param name="x1">Point 2 x</param>
-        /// <param name="y1">Point 2 y</param>
-        /// <param name="x2">Point 3 x</param>
-        /// <param name="y2">Point 3 y</param>
-        /// <param name="image"></param>
-        /// <param name="color">Color of triangle</param>
-        public static void Triangle(int x0, int y0, int x1, int y1, int x2, int y2, Bitmap image, Color color)
+        public static void Triangle(Vector3 p0, Vector3 p1, Vector3 p2, Bitmap image, Color color, Dictionary<int, int> zBuffer)
         {
             int xTop = 0, yTop = 0, xBot = 0, yBot = 0, xMid = 0, yMid = 0;
-            if (y0 >= Math.Max(y1, y2))
+            if (p0.y >= Math.Max(p1.y, p2.y))
             {
-                xTop = x0;
-                yTop = y0;
-                xMid = y1 > y2 ? x1 : x2;
-                yMid = y1 > y2 ? y1 : y2;
-                xBot = y1 <= y2 ? x1 : x2;
-                yBot = y1 <= y2 ? y1 : y2;
+                xTop = p0.x;
+                yTop = p0.y;
+                xMid = p1.y > p2.y ? p1.y : p2.y;
+                yMid = p1.y > p2.y ? p1.y : p2.y;
+                xBot = p1.y <= p2.y ? p1.y : p2.y;
+                yBot = p1.y <= p2.y ? p1.y : p2.y;
             }
-            else if (y1 >= Math.Max(y0, y2))
+            else if (p1.y >= Math.Max(p0.y, p2.y))
             {
-                xTop = x1;
-                yTop = y1;
-                xMid = y0 > y2 ? x0 : x2;
-                yMid = y0 > y2 ? y0 : y2;
-                xBot = y0 <= y2 ? x0 : x2;
-                yBot = y0 <= y2 ? y0 : y2;
+                xTop = p1.x;
+                yTop = p1.y;
+                xMid = p0.y > p2.y ? p0.x : p2.x;
+                yMid = p0.y > p2.y ? p0.y : p2.y;
+                xBot = p0.y <= p2.y ? p0.x : p2.x;
+                yBot = p0.y <= p2.y ? p0.y : p2.y;
             }
-            else if (y2 >= Math.Max(y0, y1))
+            else if (p2.y >= Math.Max(p0.y, p1.y))
             {
-                xTop = x2;
-                yTop = y2;
-                xMid = y0 > y1 ? x0 : x1;
-                yMid = y0 > y1 ? y0 : y1;
-                xBot = y0 <= y1 ? x0 : x1;
-                yBot = y0 <= y1 ? y0 : y1;
+                xTop = p2.x;
+                yTop = p2.y;
+                xMid = p0.y > p1.y ? p0.x : p1.x;
+                yMid = p0.y > p1.y ? p0.y : p1.y;
+                xBot = p0.y <= p1.y ? p0.x : p1.x;
+                yBot = p0.y <= p1.y ? p0.y : p1.y;
             }
 
             int dxs = Math.Abs(xBot - xTop);
@@ -166,7 +135,7 @@ namespace RenderProject
 
             for (int y = yBot; y < yMid; y++)
             {
-                Line(xs, y, xa, y, image, color);
+                Line(xs, y, xa, y, image, color, zBuffer);
 
                 shiftS += stepS;
                 shiftA += stepA;
@@ -195,7 +164,7 @@ namespace RenderProject
 
             for (int y = yMid; y <= yTop; y++)
             {
-                Line(xs, y, xa, y, image, color);
+                Line(xs, y, xa, y, image, color, zBuffer);
 
                 shiftS += stepS;
                 shiftA += stepA;
@@ -212,9 +181,9 @@ namespace RenderProject
                     xa += xMoveA;
                 }
             }
-            //Line(x0, y0, x1, y1, image, Color.Red);
-            //Line(x0, y0, x2, y2, image, Color.Red);
-            //Line(x2, y2, x1, y1, image, Color.Red);
+            //Line(p0.x, p0.y, p1.x, p1.y, image, Color.Red);
+            //Line(p0.x, p0.y, p2.x, p2.y, image, Color.Red);
+            //Line(p2.x, p2.y, p1.x, p1.y, image, Color.Red);
         }
 
     }

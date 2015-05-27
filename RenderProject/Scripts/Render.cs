@@ -21,6 +21,8 @@ namespace RenderProject
 
             model.Load("E:\\Projects\\RenderProject\\RenderProject\\RenderProject\\Models\\head.obj", 1);
 
+            Dictionary<int, int> zBuffer = new Dictionary<int, int>();
+
             for (int i = 1; i < model.faces.Count + 1; i++)
             {
                 Model.Face face = model.faces[i];
@@ -69,7 +71,7 @@ namespace RenderProject
 
                 Color color = Color.FromArgb(255, (int) (intence*255), (int) (intence*255), (int) (intence*255));
 
-                Drawing.Polygon(points, bmp, color);
+                Drawing.Polygon(points, bmp, color, zBuffer);
             }
             
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);

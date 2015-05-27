@@ -50,7 +50,7 @@ namespace RenderProject.Graphics
                 return new VertexNormal(nx, ny, nz);
             }
 
-            private const double NormalTolerance = 0.1e-37;
+            private const double NormalTolerance = 0.00000001;
             public float x, y, z;
 
             public VertexNormal(float x, float y, float z)

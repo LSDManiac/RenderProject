@@ -38,6 +38,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Models\BigShip_model_1.obj" />
+    <None Include="Models\head.obj" />
+    <None Include="Models\PlaneShip_model_1.obj" />
+    <None Include="Models\RocketLauncher_model_1.obj" />
+    <None Include="Models\Rocket_model_1.obj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Scripts\Drawing.cs" />

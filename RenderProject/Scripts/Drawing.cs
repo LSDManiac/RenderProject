@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace RenderProject.Scripts
+namespace RenderProject
 {
-    static class Drawing
+    public static class Drawing
     {
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace RenderProject.Scripts
         public static void Triangle(int x0, int y0, int x1, int y1, int x2, int y2, Bitmap image, Color color)
         {
             int xTop = 0, yTop = 0, xBot = 0, yBot = 0, xMid = 0, yMid = 0;
-            if (y0 > Math.Max(y1, y2))
+            if (y0 >= Math.Max(y1, y2))
             {
                 xTop = x0;
                 yTop = y0;
@@ -128,7 +128,7 @@ namespace RenderProject.Scripts
                 xBot = y1 <= y2 ? x1 : x2;
                 yBot = y1 <= y2 ? y1 : y2;
             }
-            if (y1 > Math.Max(y0, y2))
+            else if (y1 >= Math.Max(y0, y2))
             {
                 xTop = x1;
                 yTop = y1;
@@ -137,7 +137,7 @@ namespace RenderProject.Scripts
                 xBot = y0 <= y2 ? x0 : x2;
                 yBot = y0 <= y2 ? y0 : y2;
             }
-            if (y2 > Math.Max(y0, y1))
+            else if (y2 >= Math.Max(y0, y1))
             {
                 xTop = x2;
                 yTop = y2;
@@ -164,7 +164,7 @@ namespace RenderProject.Scripts
             int xMoveS = xTop > xBot ? 1 : -1;
             int xMoveA = xMid > xBot ? 1 : -1; ;
 
-            for (int y = yBot; y <= yMid; y++)
+            for (int y = yBot; y < yMid; y++)
             {
                 Line(xs, y, xa, y, image, color);
 
@@ -186,6 +186,7 @@ namespace RenderProject.Scripts
 
             dxa = Math.Abs(xTop - xMid);
             dya = Math.Abs(yTop - yMid);
+            xa = xMid;
 
             shiftA = 0;
             stepA = 2 * dxa;
@@ -211,6 +212,9 @@ namespace RenderProject.Scripts
                     xa += xMoveA;
                 }
             }
+            //Line(x0, y0, x1, y1, image, Color.Red);
+            //Line(x0, y0, x2, y2, image, Color.Red);
+            //Line(x2, y2, x1, y1, image, Color.Red);
         }
 
     }

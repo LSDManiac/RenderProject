@@ -87,33 +87,36 @@ namespace RenderProject
 
         public static void Triangle(Vector3 p0, Vector3 p1, Vector3 p2, Bitmap image, Color color, Dictionary<int, int> zBuffer)
         {
+            Vector2i p0i = p0;
+            Vector2i p1i = p1;
+            Vector2i p2i = p2;
             int xTop = 0, yTop = 0, xBot = 0, yBot = 0, xMid = 0, yMid = 0;
-            if (p0.y >= Math.Max(p1.y, p2.y))
+            if (p0i.y >= Math.Max(p1i.y, p2i.y))
             {
-                xTop = p0.x;
-                yTop = p0.y;
-                xMid = p1.y > p2.y ? p1.y : p2.y;
-                yMid = p1.y > p2.y ? p1.y : p2.y;
-                xBot = p1.y <= p2.y ? p1.y : p2.y;
-                yBot = p1.y <= p2.y ? p1.y : p2.y;
+                xTop = p0i.x;
+                yTop = p0i.y;
+                xMid = p1i.y > p2i.y ? p1i.y : p2i.y;
+                yMid = p1i.y > p2i.y ? p1i.y : p2i.y;
+                xBot = p1i.y <= p2i.y ? p1i.y : p2i.y;
+                yBot = p1i.y <= p2i.y ? p1i.y : p2i.y;
             }
-            else if (p1.y >= Math.Max(p0.y, p2.y))
+            else if (p1i.y >= Math.Max(p0i.y, p2i.y))
             {
-                xTop = p1.x;
-                yTop = p1.y;
-                xMid = p0.y > p2.y ? p0.x : p2.x;
-                yMid = p0.y > p2.y ? p0.y : p2.y;
-                xBot = p0.y <= p2.y ? p0.x : p2.x;
-                yBot = p0.y <= p2.y ? p0.y : p2.y;
+                xTop = p1i.x;
+                yTop = p1i.y;
+                xMid = p0i.y > p2i.y ? p0i.x : p2i.x;
+                yMid = p0i.y > p2i.y ? p0i.y : p2i.y;
+                xBot = p0i.y <= p2i.y ? p0i.x : p2i.x;
+                yBot = p0i.y <= p2i.y ? p0i.y : p2i.y;
             }
-            else if (p2.y >= Math.Max(p0.y, p1.y))
+            else if (p2i.y >= Math.Max(p0i.y, p1i.y))
             {
-                xTop = p2.x;
-                yTop = p2.y;
-                xMid = p0.y > p1.y ? p0.x : p1.x;
-                yMid = p0.y > p1.y ? p0.y : p1.y;
-                xBot = p0.y <= p1.y ? p0.x : p1.x;
-                yBot = p0.y <= p1.y ? p0.y : p1.y;
+                xTop = p2i.x;
+                yTop = p2i.y;
+                xMid = p0i.y > p1i.y ? p0i.x : p1i.x;
+                yMid = p0i.y > p1i.y ? p0i.y : p1i.y;
+                xBot = p0i.y <= p1i.y ? p0i.x : p1i.x;
+                yBot = p0i.y <= p1i.y ? p0i.y : p1i.y;
             }
 
             int dxs = Math.Abs(xBot - xTop);

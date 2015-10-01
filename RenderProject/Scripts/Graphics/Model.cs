@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RenderProject.MyMath;
 
 namespace RenderProject.Graphics
 {
@@ -7,70 +8,7 @@ namespace RenderProject.Graphics
     {
 
         #region Inner classes
-
-        public class Vertex
-        {
-            public float x, y, z, w;
-
-            public Vertex(float x, float y, float z, float w = 1)
-            {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                this.w = w;
-            }
-        }
-
-        public class VertexTexture
-        {
-            public float u, v, w;
-
-            public VertexTexture(float u, float v, float w = 0)
-            {
-                this.u = u;
-                this.v = v;
-                this.w = w;
-            }
-        }
-
-        public class VertexNormal
-        {
-            public static VertexNormal CountNormal(Vertex v1, Vertex v2, Vertex v3)
-            {
-                float x1fn = v2.x - v1.x;
-                float y1fn = v2.y - v1.y;
-                float z1fn = v2.z - v1.z;
-
-                float x2fn = v3.x - v1.x;
-                float y2fn = v3.y - v1.y;
-                float z2fn = v3.z - v1.z;
-                float nx = y1fn * z2fn - z1fn * y2fn;
-                float ny = z1fn * x2fn - x1fn * z2fn;
-                float nz = x1fn * y2fn - y1fn * x2fn;
-                return new VertexNormal(nx, ny, nz);
-            }
-
-            private const double NormalTolerance = 0.00000001;
-            public float x, y, z;
-
-            public VertexNormal(float x, float y, float z)
-            {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-            }
-
-            public void Normalize()
-            {
-                double module = x*x + y*y + z*z;
-                if (Math.Abs(module - 1) < NormalTolerance) return;
-                module = Math.Sqrt(module);
-                x = (float)(x / module);
-                y = (float)(y / module);
-                z = (float)(z / module);
-            }
-        }
-
+        
         public class Face
         {
             public List<int> vertexes;
@@ -89,9 +27,9 @@ namespace RenderProject.Graphics
 
         #region Public fields
 
-        public Dictionary<int, Vertex> vertexes;
-        public Dictionary<int, VertexTexture> textureVertexes;
-        public Dictionary<int, VertexNormal> normalsVertexes;
+        public Dictionary<int, Quaternion> vertexes;
+        public Dictionary<int, Vector3> textureVertexes;
+        public Dictionary<int, Vector3> normalsVertexes;
         public Dictionary<int, Face> faces;
 
         #endregion
@@ -100,9 +38,9 @@ namespace RenderProject.Graphics
 
         public void Load(string path, float scale = 1)
         {
-            vertexes = new Dictionary<int, Vertex>();
-            textureVertexes = new Dictionary<int, VertexTexture>();
-            normalsVertexes = new Dictionary<int, VertexNormal>();
+            vertexes = new Dictionary<int, Quaternion>();
+            textureVertexes = new Dictionary<int, Vector3>();
+            normalsVertexes = new Dictionary<int, Vector3>();
             faces = new Dictionary<int, Face>();
 
             string[] lines = System.IO.File.ReadAllLines(path);
@@ -120,7 +58,7 @@ namespace RenderProject.Graphics
                         w = splitted.Length > 4 ? float.Parse(splitted[4]) : 1;
 
                         vertexes.Add(vertexes.Count + 1,
-                            new Vertex(x, y, z, w));
+                            new Quaternion(x, y, z, w));
                         break;
 
                     case "vt":
@@ -128,7 +66,7 @@ namespace RenderProject.Graphics
                         y = float.Parse(splitted[2]);
                         w = splitted.Length > 3 ? float.Parse(splitted[3]) : 0;
 
-                        textureVertexes.Add(textureVertexes.Count + 1, new VertexTexture(x, y, w));
+                        textureVertexes.Add(textureVertexes.Count + 1, new Vector3(x, y, w));
                         break;
 
                     case "vn":
@@ -136,7 +74,7 @@ namespace RenderProject.Graphics
                         y = float.Parse(splitted[2]);
                         z = float.Parse(splitted[3]);
 
-                        normalsVertexes.Add(normalsVertexes.Count + 1, new VertexNormal(x, y, z));
+                        normalsVertexes.Add(normalsVertexes.Count + 1, new Vector3(x, y, z));
                         break;
 
                     case "f":
@@ -162,5 +100,6 @@ namespace RenderProject.Graphics
         }
 
         #endregion
+
     }
 }

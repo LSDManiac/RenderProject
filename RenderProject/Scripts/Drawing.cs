@@ -15,7 +15,9 @@ namespace RenderProject
             b = temp;
         }
 
-        public static void Line(Vector3 p0, Vector3 p1, Bitmap image, Color color, Dictionary<Vector2i, int> zBuffer)
+        public static void Line(Vector3 p0, Vector3 p1,
+                                Bitmap image, Color color,
+                                Dictionary<Vector2i, int> zBuffer)
         {
             Vector2i p0i = p0;
             Vector2i p1i = p1;
@@ -76,7 +78,9 @@ namespace RenderProject
             }
         }
 
-        public static void Polygon(List<Vector3i> points, Bitmap image, Color color, Dictionary<int, int> zBuffer)
+        public static void Polygon(List<Vector3> points,
+                                   Bitmap image, Color color,
+                                   Dictionary<Vector2i, int> zBuffer)
         {
             // Splits polygon into triangles
             for (int i = 2; i < points.Count; i++)
@@ -85,7 +89,9 @@ namespace RenderProject
             }
         }
 
-        public static void Triangle(Vector3 p0, Vector3 p1, Vector3 p2, Bitmap image, Color color, Dictionary<int, int> zBuffer)
+        public static void Triangle(Vector3 p0, Vector3 p1, Vector3 p2,
+                                    Bitmap image, Color color,
+                                    Dictionary<Vector2i, int> zBuffer)
         {
             Vector2i p0i = p0;
             Vector2i p1i = p1;
@@ -138,6 +144,7 @@ namespace RenderProject
 
             for (int y = yBot; y < yMid; y++)
             {
+                Vector3 s = 
                 Line(xs, y, xa, y, image, color, zBuffer);
 
                 shiftS += stepS;

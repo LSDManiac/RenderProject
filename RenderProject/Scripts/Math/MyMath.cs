@@ -123,6 +123,16 @@ namespace RenderProject.MyMath
 
         #endregion
 
+        #region Counstructors
+
+        public Vector2i(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        #endregion
+
     }
 
     public struct Vector3

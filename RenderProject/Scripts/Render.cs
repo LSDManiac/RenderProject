@@ -12,8 +12,9 @@ namespace RenderProject
 
         public static void Main()
         {
-            int width = 800;
-            int height = 800;
+            int width = 1200;
+            int height = 1200;
+            int depth = 500;
 
             Bitmap bmp = new Bitmap(width, height);
 
@@ -21,7 +22,7 @@ namespace RenderProject
 
             model.Load("E:\\Projects\\RenderProject\\RenderProject\\RenderProject\\Models\\head.obj", 1);
 
-            Dictionary<Vector2i, int> zBuffer = new Dictionary<Vector2i, int>();
+            Dictionary<Vector2i, double> zBuffer = new Dictionary<Vector2i, double>();
 
             for (int i = 1; i < model.faces.Count + 1; i++)
             {
@@ -47,7 +48,10 @@ namespace RenderProject
 
                     vect.x = (int)((vect.x / 2 + 0.5f) * width);
                     vect.y = (int)((vect.y / 2 + 0.5f) * height);
-                    
+
+                    // Depth experiment here, trying to fix z buffer problem
+                    vect.z = (int)(vect.z * depth);
+
                     points.Add(vect);
                 }
 

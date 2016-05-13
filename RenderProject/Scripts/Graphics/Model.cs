@@ -31,7 +31,7 @@ namespace RenderProject.Graphics
         public Dictionary<int, Vector3> textureVertexes;
         public Dictionary<int, Vector3> normalsVertexes;
         public Dictionary<int, Face> faces;
-
+        
         #endregion
 
         #region Public interfaces
@@ -98,12 +98,7 @@ namespace RenderProject.Graphics
                 }
             }
         }
-
-        public void LoadTexture(string path)
-        {
-
-        }
-
+        
         #endregion
 
     }

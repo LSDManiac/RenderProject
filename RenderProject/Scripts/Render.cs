@@ -23,8 +23,8 @@ namespace RenderProject
             //string path = "E:\\Projects\\RenderProject\\RenderProject\\RenderProject\\Models\\";
             
             model.Load(path + "head.obj", 1);
-            model.LoadTexture(path + "head_diffuse.tga");
 
+            Bitmap texture = new Bitmap(path + "head_diffuse.tga");
             Dictionary<Vector2i, double> zBuffer = new Dictionary<Vector2i, double>();
 
             for (int i = 1; i < model.faces.Count + 1; i++)
@@ -45,11 +45,15 @@ namespace RenderProject
 
                 Drawing.ColorDelegate colorDel = delegate (Vector3 pos)
                 {
+                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    texture.GetPixel(0,0);
                     return Color.FromArgb(255, (int) (intence*255 / 2), (int) (intence*255), (int) (intence*255)); 
                 };
 
                 List<Vector3> points = new List<Vector3>();
+                List<Vector3> textures = new List<Vector3>();
                 
+
                 for (int j = 0; j < face.vertexes.Count; j++)
                 {
                     Vector3 vect = model.vertexes[face.vertexes[j]];
@@ -58,8 +62,13 @@ namespace RenderProject
                     vect.y = (int)((vect.y / 2 + 0.5f) * height);
                     
                     points.Add(vect);
+
+                    Vector3 text = model.textureVertexes[face.textures[j]];
+                    text.x = (int)(text.x * texture.Width);
+                    text.y = (int)(text.y * texture.Height);
+                    textures.Add(text);
                 }
-                
+
                 Drawing.Polygon(points, bmp, colorDel, zBuffer);
             }
             

@@ -45,8 +45,15 @@ namespace RenderProject
 
                 Drawing.ColorDelegate colorDel = delegate (Vector3 pos)
                 {
-                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    texture.GetPixel(0,0);
+
+                    float a1 = 0, a2 = 0, a3 = 0;
+                    float b1 = 0, b2 = 0, b3 = 0;
+
+
+                    double u = a1 * pos.x + a2 * pos.y + a3 * pos.z;
+                    double v = b1 * pos.x + b2 * pos.y + b3 * pos.z;
+                    
+                    texture.GetPixel((int)(u * texture.Width),(int)(v * texture.Height));
                     return Color.FromArgb(255, (int) (intence*255 / 2), (int) (intence*255), (int) (intence*255)); 
                 };
 

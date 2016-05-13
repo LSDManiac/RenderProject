@@ -44,6 +44,9 @@
     <None Include="bin\Debug\RenderProject.vshost.exe.manifest" />
     <None Include="Models\BigShip_model_1.obj" />
     <None Include="Models\head.obj" />
+    <None Include="Models\head_diffuse.tga" />
+    <None Include="Models\head_nm.tga" />
+    <None Include="Models\head_spec.tga" />
     <None Include="Models\PlaneShip_model_1.obj" />
     <None Include="Models\RocketLauncher_model_1.obj" />
     <None Include="Models\Rocket_model_1.obj" />

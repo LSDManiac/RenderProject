@@ -52,7 +52,6 @@ namespace RenderProject.Graphics
                 switch (splitted[0])
                 {
                     case "v":
-                        
                         x = float.Parse(splitted[1].Replace(".", ",")) * scale;
                         y = float.Parse(splitted[2].Replace(".", ",")) * scale;
                         z = float.Parse(splitted[3].Replace(".", ",")) * scale;
@@ -98,6 +97,11 @@ namespace RenderProject.Graphics
                         break;
                 }
             }
+        }
+
+        public void LoadTexture(string path)
+        {
+
         }
 
         #endregion

@@ -8,6 +8,9 @@ namespace RenderProject
     public static class Drawing
     {
 
+        public delegate Color ColorDelegate(Vector3 pos);
+        public delegate Color PixelColorDelegate(Vector2i pos);
+
         public static void Swap(ref int a, ref int b)
         {
             int temp = a;
@@ -23,7 +26,7 @@ namespace RenderProject
         }
 
         public static void Line(Vector3 p0, Vector3 p1,
-                                Bitmap image, Color color,
+                                Bitmap image, ColorDelegate colorD,
                                 Dictionary<Vector2i, double> zBuffer)
         {
 
@@ -76,7 +79,7 @@ namespace RenderProject
                         Vector2i curPoint = new Vector2i(y, x);
                         if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] < curZ)
                         {
-                            image.SetPixel(y, x, color);
+                            image.SetPixel(y, x, colorD(new Vector3(y, x, curZ)));
                             if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = curZ;
                             else zBuffer.Add(curPoint, curZ);
                         }
@@ -89,7 +92,7 @@ namespace RenderProject
                         Vector2i curPoint = new Vector2i(x, y);
                         if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] < curZ)
                         {
-                            image.SetPixel(x, y, color);
+                            image.SetPixel(x, y, colorD(new Vector3(x, y, curZ)));
                             if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = curZ;
                             else zBuffer.Add(curPoint, curZ);
                         }
@@ -109,18 +112,18 @@ namespace RenderProject
         }
 
         public static void Polygon(List<Vector3> points,
-                                   Bitmap image, Color color,
+                                   Bitmap image, ColorDelegate colorD,
                                    Dictionary<Vector2i, double> zBuffer)
         {
             // Splits polygon into triangles
             for (int i = 2; i < points.Count; i++)
             {
-                Triangle(points[0], points[i - 1], points[i], image, color, zBuffer);
+                Triangle(points[0], points[i - 1], points[i], image, colorD, zBuffer);
             }
         }
 
         public static void Triangle(Vector3 p0, Vector3 p1, Vector3 p2,
-                                    Bitmap image, Color color,
+                                    Bitmap image, ColorDelegate colorD,
                                     Dictionary<Vector2i, double> zBuffer)
         {
             Vector2i p0i = p0;
@@ -198,7 +201,7 @@ namespace RenderProject
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-                Line(s, a, image, color, zBuffer);
+                Line(s, a, image, colorD, zBuffer);
 
                 zs += zsStep;
                 za += zaStep;
@@ -235,7 +238,7 @@ namespace RenderProject
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-                Line(s, a, image, color, zBuffer);
+                Line(s, a, image, colorD, zBuffer);
 
                 zs += zsStep;
                 za += zaStep;
@@ -255,9 +258,9 @@ namespace RenderProject
                     xa += xMoveA;
                 }
             }
-            //Line(p0.x, p0.y, p1.x, p1.y, image, Color.Red);
-            //Line(p0.x, p0.y, p2.x, p2.y, image, Color.Red);
-            //Line(p2.x, p2.y, p1.x, p1.y, image, Color.Red);
+            //Line(p0, p1, image, delegate { return Color.Red; }, new Dictionary<Vector2i, double>());
+            //Line(p0, p2, image, delegate { return Color.Red; }, new Dictionary<Vector2i, double>());
+            //Line(p1, p2, image, delegate { return Color.Red; }, new Dictionary<Vector2i, double>());
         }
 
     }

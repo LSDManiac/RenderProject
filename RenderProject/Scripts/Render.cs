@@ -20,7 +20,8 @@ namespace RenderProject
 
             Model model = new Model();
 
-            model.Load("E:\\Projects\\RenderProject\\RenderProject\\RenderProject\\Models\\head.obj", 1);
+            //model.Load("E:\\Projects\\RenderProject\\RenderProject\\RenderProject\\Models\\head.obj", 1);
+            model.Load("C:\\Projects\\RenderProject\\RenderProject\\Models\\head.obj", 1);
 
             Dictionary<Vector2i, double> zBuffer = new Dictionary<Vector2i, double>();
 

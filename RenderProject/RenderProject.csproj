@@ -41,6 +41,9 @@
     <None Include="App.config" />
     <None Include="bin\Debug\RenderProject.vshost.exe.config" />
     <None Include="bin\Debug\RenderProject.vshost.exe.manifest" />
+    <None Include="Models\african_head_diffuse.tga" />
+    <None Include="Models\african_head_nm.tga" />
+    <None Include="Models\african_head_spec.tga" />
     <None Include="Models\BigShip_model_1.obj" />
     <None Include="Models\head.obj" />
     <None Include="Models\head_diffuse.tga" />
@@ -52,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Scripts\Drawing.cs" />
+    <Compile Include="Scripts\Graphics\ColorPerformers\TextureColorPerformer.cs" />
+    <Compile Include="Scripts\Graphics\ColorPerformers\ColorPerformer.cs" />
     <Compile Include="Scripts\Graphics\Material.cs" />
     <Compile Include="Scripts\Graphics\Model.cs" />
     <Compile Include="Scripts\MyMath\Matrices.cs" />
@@ -64,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\RenderProject.vshost.exe" />
+    <Content Include="Models\african_head_SSS.jpg" />
+    <Content Include="Models\head_diffuse.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

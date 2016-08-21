@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using RenderProject.Graphics.ColorPerformers;
 using RenderProject.MyMath;
 
 namespace RenderProject
@@ -53,7 +54,7 @@ namespace RenderProject
         }
 
         public static void Line(Vector3 p0, Vector3 p1,
-                                Bitmap image, ColorDelegate colorD,
+                                Bitmap image, ColorPerformer colorP,
                                 Dictionary<Vector2I, double> zBuffer)
         {
             Vector2I p0I = p0;
@@ -99,11 +100,11 @@ namespace RenderProject
             {
                 if (swapped)
                 {
-                    SetPixel(y, x, curZ, colorD(new Vector3(y, x, curZ)), image, zBuffer);
+                    SetPixel(y, x, curZ, colorP.GetColor(new Vector3(y, x, curZ)), image, zBuffer);
                 }
                 else
                 {
-                    SetPixel(x, y, curZ, colorD(new Vector3(x, y, curZ)), image, zBuffer);
+                    SetPixel(x, y, curZ, colorP.GetColor(new Vector3(x, y, curZ)), image, zBuffer);
                 }
 
                 shift += step;
@@ -119,18 +120,18 @@ namespace RenderProject
         }
         
         public static void Polygon(DrawFace face,
-                                   Bitmap image, ColorDelegate colorD,
+                                   Bitmap image, ColorPerformer colorP,
                                    Dictionary<Vector2I, double> zBuffer)
         {
             // Splits polygon into triangles
             for (int i = 2; i < face.points.Count; i++)
             {
-                Triangle(face.points[0], face.points[i - 1], face.points[i], image, colorD, zBuffer);
+                Triangle(face.points[0], face.points[i - 1], face.points[i], image, colorP, zBuffer);
             }
         }
 
         public static void Triangle(Vector3 p0, Vector3 p1, Vector3 p2,
-                                    Bitmap image, ColorDelegate colorD,
+                                    Bitmap image, ColorPerformer colorP,
                                     Dictionary<Vector2I, double> zBuffer)
         {
             Vector2I p0I = new Vector2I((int)Math.Round(p0.x), (int)Math.Round(p0.y));
@@ -208,7 +209,7 @@ namespace RenderProject
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-                Line(s, a, image, colorD, zBuffer);
+                Line(s, a, image, colorP, zBuffer);
 
                 zs += zsStep;
                 za += zaStep;
@@ -245,7 +246,7 @@ namespace RenderProject
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-                Line(s, a, image, colorD, zBuffer);
+                Line(s, a, image, colorP, zBuffer);
 
                 zs += zsStep;
                 za += zaStep;

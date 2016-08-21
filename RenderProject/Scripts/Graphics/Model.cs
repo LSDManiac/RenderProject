@@ -5,7 +5,6 @@ namespace RenderProject.Graphics
 {
     class Model
     {
-
         #region Inner classes
         
         public class Face

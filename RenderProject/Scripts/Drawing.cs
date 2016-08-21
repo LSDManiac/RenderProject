@@ -2,11 +2,25 @@
 using System.Collections.Generic;
 using System.Drawing;
 using RenderProject.MyMath;
+using RenderProject.Graphics;
 
 namespace RenderProject
 {
     public static class Drawing
     {
+        public class DrawFace
+        {
+            public DrawFace()
+            {
+                points = new List<Vector3>();
+                textures = new List<Vector3>();
+                normals = new List<Vector3>();
+            }
+
+            public List<Vector3> points;
+            public List<Vector3> textures;
+            public List<Vector3> normals;
+        }
 
         public static void Swap(ref int a, ref int b)
         {
@@ -74,7 +88,7 @@ namespace RenderProject
                     if (!(y >= image.Width || y < 0 || x >= image.Height || x < 0))
                     {
                         Vector2i curPoint = new Vector2i(y, x);
-                        if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] < curZ)
+                        if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= curZ)
                         {
                             image.SetPixel(y, x, color);
                             if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = curZ;
@@ -87,7 +101,7 @@ namespace RenderProject
                     if (!(x >= image.Width || x < 0 || y >= image.Height || y < 0))
                     {
                         Vector2i curPoint = new Vector2i(x, y);
-                        if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] < curZ)
+                        if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= curZ)
                         {
                             image.SetPixel(x, y, color);
                             if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = curZ;
@@ -108,14 +122,47 @@ namespace RenderProject
             }
         }
 
-        public static void Polygon(List<Vector3> points,
+        public static void HorisontalLine(Vector3 p0, Vector3 p1,
+                                Bitmap image, Color color,
+                                Dictionary<Vector2i, double> zBuffer)
+        {
+            if (p0.x > p1.x)
+            {
+                Vector3 temp = p0;
+                p0 = p1;
+                p1 = temp;
+            }
+
+            int y = (int)p0.y;
+            int startX = (int)p0.x;
+            int endX = (int)p1.x;
+
+            double curZ = p0.z;
+            double zStep = (p1.z - p0.z) / Math.Abs(endX - startX);
+
+            for(int x = startX; x < endX; x++)
+            {
+                Vector2i curPoint = new Vector2i(x, y);
+                if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= curZ)
+                {
+                    image.SetPixel(x, y, color);
+                    if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = curZ;
+                    else zBuffer.Add(curPoint, curZ);
+                }
+                curZ += zStep;
+            }
+
+        }
+
+        public static void Polygon(DrawFace face,
                                    Bitmap image, Color color,
+                                   Material material,
                                    Dictionary<Vector2i, double> zBuffer)
         {
             // Splits polygon into triangles
-            for (int i = 2; i < points.Count; i++)
+            for (int i = 2; i < face.points.Count; i++)
             {
-                Triangle(points[0], points[i - 1], points[i], image, color, zBuffer);
+                Triangle(face.points[0], face.points[i - 1], face.points[i], image, color, zBuffer);
             }
         }
 
@@ -123,9 +170,9 @@ namespace RenderProject
                                     Bitmap image, Color color,
                                     Dictionary<Vector2i, double> zBuffer)
         {
-            Vector2i p0i = p0;
-            Vector2i p1i = p1;
-            Vector2i p2i = p2;
+            Vector2i p0i = new Vector2i((int)Math.Round(p0.x), (int)Math.Round(p0.y));
+            Vector2i p1i = new Vector2i((int)Math.Round(p1.x), (int)Math.Round(p1.y));;
+            Vector2i p2i = new Vector2i((int)Math.Round(p2.x), (int)Math.Round(p2.y));;
             int xTop = 0, yTop = 0, xBot = 0, yBot = 0, xMid = 0, yMid = 0;
             double zTop = 0, zMid = 0, zBot = 0;
             if (p0i.y >= Math.Max(p1i.y, p2i.y))
@@ -198,7 +245,7 @@ namespace RenderProject
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-                Line(s, a, image, color, zBuffer);
+                HorisontalLine(s, a, image, color, zBuffer);
 
                 zs += zsStep;
                 za += zaStep;
@@ -235,7 +282,7 @@ namespace RenderProject
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-                Line(s, a, image, color, zBuffer);
+                HorisontalLine(s, a, image, color, zBuffer);
 
                 zs += zsStep;
                 za += zaStep;

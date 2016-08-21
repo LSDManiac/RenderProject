@@ -8,19 +8,21 @@ namespace RenderProject
 {
     class Render
     {
-
-
         public static void Main()
         {
-            int width = 1200;
-            int height = 1200;
+            int width = 2000;
+            int height = 2000;
+            int gap = 100;
             int depth = 500;
 
-            Bitmap bmp = new Bitmap(width, height);
+            Bitmap bmp = new Bitmap(width + gap, height + gap);
+
+            Material texture = new Material();
+            texture.LoadTexture("D:\\Projects\\RenderProject\\RenderProject\\Models\\african_head_SSS.jpg");
 
             Model model = new Model();
 
-            model.Load("E:\\Projects\\RenderProject\\RenderProject\\RenderProject\\Models\\head.obj", 1);
+            model.Load("D:\\Projects\\RenderProject\\RenderProject\\Models\\head.obj", 1);
 
             Dictionary<Vector2i, double> zBuffer = new Dictionary<Vector2i, double>();
 
@@ -30,7 +32,7 @@ namespace RenderProject
                 Vector3 normal = Vector3.CountNormal(model.vertexes[face.vertexes[0]],
                                                      model.vertexes[face.vertexes[1]],
                                                      model.vertexes[face.vertexes[face.vertexes.Count - 1]]);
-
+                
                 normal.Normalize();
 
                 double intence = normal.z;
@@ -39,46 +41,31 @@ namespace RenderProject
                 {
                     continue;
                 }
-
-                List<Vector3> points = new List<Vector3>();
+                
+                Drawing.DrawFace drFace = new Drawing.DrawFace();
                 
                 for (int j = 0; j < face.vertexes.Count; j++)
                 {
                     Vector3 vect = model.vertexes[face.vertexes[j]];
 
-                    vect.x = (int)((vect.x / 2 + 0.5f) * width);
-                    vect.y = (int)((vect.y / 2 + 0.5f) * height);
+                    vect.x = ((vect.x / 2 + 0.5f) * width + gap/2);
+                    vect.y = ((vect.y / 2 + 0.5f) * height + gap/2);
 
                     // Depth experiment here, trying to fix z buffer problem
-                    vect.z = (int)(vect.z * depth);
+                    vect.z = (vect.z * depth);
 
-                    points.Add(vect);
+                    drFace.points.Add(vect);
+                    drFace.normals.Add(model.normalsVertexes[face.vertexes[j]]);
+                    drFace.textures.Add(model.textureVertexes[face.vertexes[j]]);
                 }
-
-                //for (int j = 1; j < face.vertexes.Count + 1; j++)
-                //{
-                //    float x0f = model.vertexes[face.vertexes[(j-1) % face.vertexes.Count]].x;
-                //    float y0f = model.vertexes[face.vertexes[(j-1) % face.vertexes.Count]].y;
-
-                //    int x0 = (int)((x0f / 2 + 0.5f) * width);
-                //    int y0 = (int)((y0f / 2 + 0.5f) * height);
-
-                //    float x1f = model.vertexes[face.vertexes[j % face.vertexes.Count]].x;
-                //    float y1f = model.vertexes[face.vertexes[j % face.vertexes.Count]].y;
-
-                //    int x1 = (int)((x1f / 2 + 0.5f) * width);
-                //    int y1 = (int)((y1f / 2 + 0.5f) * height);
-
-                //    Drawing.Line(x0, y0, x1, y1, bmp, Color.White);
-                //}
-
+                
                 Color color = Color.FromArgb(255, (int) (intence*255), (int) (intence*255), (int) (intence*255));
 
-                Drawing.Polygon(points, bmp, color, zBuffer);
+                Drawing.Polygon(drFace, bmp, color, texture, zBuffer);
             }
             
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            bmp.Save("image_light3.bmp", ImageFormat.Bmp);
+            bmp.Save("image_light.bmp", ImageFormat.Bmp);
         }
 
     }

@@ -10,3 +10,9 @@ E:\Projects\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.pd
 E:\Projects\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe
 E:\Projects\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.pdb
 E:\Projects\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.csprojResolveAssemblyReference.cache
+D:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.exe.config
+D:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.exe
+D:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.pdb
+D:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.exe
+D:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.pdb
+D:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.csprojResolveAssemblyReference.cache

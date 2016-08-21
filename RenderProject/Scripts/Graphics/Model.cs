@@ -31,7 +31,7 @@ namespace RenderProject.Graphics
         public Dictionary<int, Vector3> textureVertexes;
         public Dictionary<int, Vector3> normalsVertexes;
         public Dictionary<int, Face> faces;
-
+        
         #endregion
 
         #region Public interfaces
@@ -52,9 +52,9 @@ namespace RenderProject.Graphics
                 switch (splitted[0])
                 {
                     case "v":
-                        x = float.Parse(splitted[1]) * scale;
-                        y = float.Parse(splitted[2]) * scale;
-                        z = float.Parse(splitted[3]) * scale;
+                        x = float.Parse(splitted[1].Replace(".", ",")) * scale;
+                        y = float.Parse(splitted[2].Replace(".", ",")) * scale;
+                        z = float.Parse(splitted[3].Replace(".", ",")) * scale;
                         w = splitted.Length > 4 ? float.Parse(splitted[4]) : 1;
 
                         vertexes.Add(vertexes.Count + 1,
@@ -62,17 +62,17 @@ namespace RenderProject.Graphics
                         break;
 
                     case "vt":
-                        x = float.Parse(splitted[1]);
-                        y = float.Parse(splitted[2]);
-                        w = splitted.Length > 3 ? float.Parse(splitted[3]) : 0;
+                        x = float.Parse(splitted[1].Replace(".", ","));
+                        y = float.Parse(splitted[2].Replace(".", ","));
+                        w = splitted.Length > 3 ? float.Parse(splitted[3].Replace(".", ",")) : 0;
 
                         textureVertexes.Add(textureVertexes.Count + 1, new Vector3(x, y, w));
                         break;
 
                     case "vn":
-                        x = float.Parse(splitted[1]);
-                        y = float.Parse(splitted[2]);
-                        z = float.Parse(splitted[3]);
+                        x = float.Parse(splitted[1].Replace(".", ","));
+                        y = float.Parse(splitted[2].Replace(".", ","));
+                        z = float.Parse(splitted[3].Replace(".", ","));
 
                         normalsVertexes.Add(normalsVertexes.Count + 1, new Vector3(x, y, z));
                         break;
@@ -98,7 +98,7 @@ namespace RenderProject.Graphics
                 }
             }
         }
-
+        
         #endregion
 
     }

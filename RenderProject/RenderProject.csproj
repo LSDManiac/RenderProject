@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RenderProject</RootNamespace>
     <AssemblyName>RenderProject</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,6 +44,9 @@
     <None Include="bin\Debug\RenderProject.vshost.exe.manifest" />
     <None Include="Models\BigShip_model_1.obj" />
     <None Include="Models\head.obj" />
+    <None Include="Models\head_diffuse.tga" />
+    <None Include="Models\head_nm.tga" />
+    <None Include="Models\head_spec.tga" />
     <None Include="Models\PlaneShip_model_1.obj" />
     <None Include="Models\RocketLauncher_model_1.obj" />
     <None Include="Models\Rocket_model_1.obj" />

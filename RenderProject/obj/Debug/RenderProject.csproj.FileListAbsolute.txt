@@ -1,27 +1,5 @@
-E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe.config
-E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe
-E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.pdb
-E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.csprojResolveAssemblyReference.cache
-E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.exe
-E:\Projects\RenderProject\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.pdb
-E:\Projects\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe.config
-E:\Projects\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.exe
-E:\Projects\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.pdb
-E:\Projects\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.exe
-E:\Projects\RenderProject\RenderProject\RenderProject\bin\Debug\RenderProject.pdb
-E:\Projects\RenderProject\RenderProject\RenderProject\obj\Debug\RenderProject.csprojResolveAssemblyReference.cache
-<<<<<<< HEAD
 D:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.exe.config
-D:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.exe
-D:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.pdb
 D:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.exe
 D:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.pdb
-D:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.csprojResolveAssemblyReference.cache
-=======
-C:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.exe.config
-C:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.exe
-C:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.pdb
-C:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.exe
-C:\Projects\RenderProject\RenderProject\bin\Debug\RenderProject.pdb
-C:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.csprojResolveAssemblyReference.cache
->>>>>>> origin/master
+D:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.exe
+D:\Projects\RenderProject\RenderProject\obj\Debug\RenderProject.pdb

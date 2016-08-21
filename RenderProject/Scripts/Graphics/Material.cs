@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace RenderProject.Graphics
 {
@@ -9,7 +8,7 @@ namespace RenderProject.Graphics
 
         public void LoadTexture(string path)
         {
-            texture = new Bitmap(Bitmap.FromFile(path));
+            texture = new Bitmap(Image.FromFile(path));
         }
 
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using RenderProject.MyMath;
-using RenderProject.Graphics;
 
 namespace RenderProject
 {
@@ -23,7 +22,7 @@ namespace RenderProject
         }
 
         public delegate Color ColorDelegate(Vector3 pos);
-        public delegate Color PixelColorDelegate(Vector2i pos);
+        public delegate Color PixelColorDelegate(Vector2I pos);
 
         public static void Swap(ref int a, ref int b)
         {
@@ -41,56 +40,54 @@ namespace RenderProject
 
         public static void Line(Vector3 p0, Vector3 p1,
                                 Bitmap image, ColorDelegate colorD,
-                                Dictionary<Vector2i, double> zBuffer)
+                                Dictionary<Vector2I, double> zBuffer)
         {
-
-
-            Vector2i p0i = p0;
-            Vector2i p1i = p1;
-            double p0z = p0.z;
-            double p1z = p1.z;
+            Vector2I p0I = p0;
+            Vector2I p1I = p1;
+            double p0Z = p0.z;
+            double p1Z = p1.z;
 
             // Takes distances between point
-            int dx = Math.Abs(p1i.x - p0i.x);
-            int dy = Math.Abs(p1i.y - p0i.y);
+            int dx = Math.Abs(p1I.x - p0I.x);
+            int dy = Math.Abs(p1I.y - p0I.y);
 
             // Swap stats firstly needed to make line go from zero to I quadrant
             // Secondly swap needed to make line go on tan < 1 (it's eaier to drow line this way)
             bool swapped = false;
             if (dx < dy)
             {
-                Swap(ref p0i.x, ref p0i.y);
-                Swap(ref p1i.x, ref p1i.y);
+                Swap(ref p0I.x, ref p0I.y);
+                Swap(ref p1I.x, ref p1I.y);
                 swapped = true;
             }
 
-            if (p0i.x > p1i.x)
+            if (p0I.x > p1I.x)
             {
-                Swap(ref p0i.x, ref p1i.x);
-                Swap(ref p0i.y, ref p1i.y);
-                Swap(ref p0z, ref p1z);
+                Swap(ref p0I.x, ref p1I.x);
+                Swap(ref p0I.y, ref p1I.y);
+                Swap(ref p0Z, ref p1Z);
             }
             
             // Recounting distances and creating shifts and steps variable
-            dx = Math.Abs(p1i.x - p0i.x);
-            dy = Math.Abs(p1i.y - p0i.y);
+            dx = Math.Abs(p1I.x - p0I.x);
+            dy = Math.Abs(p1I.y - p0I.y);
             int shift = 0;
             int step = 2*dy;
-            int y = p0i.y;
+            int y = p0I.y;
 
-            double curZ = p0z;
-            double zStep = (p1z - p0z) / Math.Abs(p1i.x - p0i.x);
+            double curZ = p0Z;
+            double zStep = (p1Z - p0Z) / Math.Abs(p1I.x - p0I.x);
 
             // Main idea of this method not to count trigonometry
             // But to count incrementing of y param in int
             // Whenever here is z buffer also we count z step in double
-            for (int x = p0i.x; x <= p1i.x; x++)
+            for (int x = p0I.x; x <= p1I.x; x++)
             {
                 if (swapped)
                 {
                     if (!(y >= image.Width || y < 0 || x >= image.Height || x < 0))
                     {
-                        Vector2i curPoint = new Vector2i(y, x);
+                        Vector2I curPoint = new Vector2I(y, x);
                         if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= curZ)
                         {
                             image.SetPixel(y, x, colorD(new Vector3(y, x, curZ)));
@@ -103,7 +100,7 @@ namespace RenderProject
                 {
                     if (!(x >= image.Width || x < 0 || y >= image.Height || y < 0))
                     {
-                        Vector2i curPoint = new Vector2i(x, y);
+                        Vector2I curPoint = new Vector2I(x, y);
                         if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= curZ)
                         {
                             image.SetPixel(x, y, colorD(new Vector3(x, y, curZ)));
@@ -118,115 +115,73 @@ namespace RenderProject
                 if (shift >= dx)
                 {
                     shift -= 2*dx;
-                    y += (p0i.y > p1i.y ? -1 : 1);
+                    y += (p0I.y > p1I.y ? -1 : 1);
                 }
 
                 curZ += zStep;
             }
         }
-
-<<<<<<< HEAD
-        public static void HorisontalLine(Vector3 p0, Vector3 p1,
-                                Bitmap image, Color color,
-                                Dictionary<Vector2i, double> zBuffer)
-        {
-            if (p0.x > p1.x)
-            {
-                Vector3 temp = p0;
-                p0 = p1;
-                p1 = temp;
-            }
-
-            int y = (int)p0.y;
-            int startX = (int)p0.x;
-            int endX = (int)p1.x;
-
-            double curZ = p0.z;
-            double zStep = (p1.z - p0.z) / Math.Abs(endX - startX);
-
-            for(int x = startX; x < endX; x++)
-            {
-                Vector2i curPoint = new Vector2i(x, y);
-                if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= curZ)
-                {
-                    image.SetPixel(x, y, color);
-                    if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = curZ;
-                    else zBuffer.Add(curPoint, curZ);
-                }
-                curZ += zStep;
-            }
-
-        }
-
+        
         public static void Polygon(DrawFace face,
-                                   Bitmap image, Color color,
-                                   Material material,
-=======
-        public static void Polygon(List<Vector3> points,
                                    Bitmap image, ColorDelegate colorD,
->>>>>>> origin/master
-                                   Dictionary<Vector2i, double> zBuffer)
+                                   Dictionary<Vector2I, double> zBuffer)
         {
             // Splits polygon into triangles
             for (int i = 2; i < face.points.Count; i++)
             {
-<<<<<<< HEAD
-                Triangle(face.points[0], face.points[i - 1], face.points[i], image, color, zBuffer);
-=======
-                Triangle(points[0], points[i - 1], points[i], image, colorD, zBuffer);
->>>>>>> origin/master
+                Triangle(face.points[0], face.points[i - 1], face.points[i], image, colorD, zBuffer);
             }
         }
 
         public static void Triangle(Vector3 p0, Vector3 p1, Vector3 p2,
                                     Bitmap image, ColorDelegate colorD,
-                                    Dictionary<Vector2i, double> zBuffer)
+                                    Dictionary<Vector2I, double> zBuffer)
         {
-            Vector2i p0i = new Vector2i((int)Math.Round(p0.x), (int)Math.Round(p0.y));
-            Vector2i p1i = new Vector2i((int)Math.Round(p1.x), (int)Math.Round(p1.y));;
-            Vector2i p2i = new Vector2i((int)Math.Round(p2.x), (int)Math.Round(p2.y));;
+            Vector2I p0I = new Vector2I((int)Math.Round(p0.x), (int)Math.Round(p0.y));
+            Vector2I p1I = new Vector2I((int)Math.Round(p1.x), (int)Math.Round(p1.y));
+            Vector2I p2I = new Vector2I((int)Math.Round(p2.x), (int)Math.Round(p2.y));
             int xTop = 0, yTop = 0, xBot = 0, yBot = 0, xMid = 0, yMid = 0;
             double zTop = 0, zMid = 0, zBot = 0;
-            if (p0i.y >= Math.Max(p1i.y, p2i.y))
+            if (p0I.y >= Math.Max(p1I.y, p2I.y))
             {
-                xTop = p0i.x;
-                yTop = p0i.y;
+                xTop = p0I.x;
+                yTop = p0I.y;
                 zTop = p0.z;
                 
-                bool minBotRatio = p1i.y > p2i.y;
-                xMid = minBotRatio ? p1i.x : p2i.x;
-                yMid = minBotRatio ? p1i.y : p2i.y;
+                bool minBotRatio = p1I.y > p2I.y;
+                xMid = minBotRatio ? p1I.x : p2I.x;
+                yMid = minBotRatio ? p1I.y : p2I.y;
                 zMid = minBotRatio ? p1.z : p2.z;
-                xBot = !minBotRatio ? p1i.x : p2i.x;
-                yBot = !minBotRatio ? p1i.y : p2i.y;
+                xBot = !minBotRatio ? p1I.x : p2I.x;
+                yBot = !minBotRatio ? p1I.y : p2I.y;
                 zBot = !minBotRatio ? p1.z : p2.z;
             }
-            else if (p1i.y >= Math.Max(p0i.y, p2i.y))
+            else if (p1I.y >= Math.Max(p0I.y, p2I.y))
             {
-                xTop = p1i.x;
-                yTop = p1i.y;
+                xTop = p1I.x;
+                yTop = p1I.y;
                 zTop = p1.z;
 
-                bool minBotRatio = p0i.y > p2i.y;
-                xMid = minBotRatio ? p0i.x : p2i.x;
-                yMid = minBotRatio ? p0i.y : p2i.y;
+                bool minBotRatio = p0I.y > p2I.y;
+                xMid = minBotRatio ? p0I.x : p2I.x;
+                yMid = minBotRatio ? p0I.y : p2I.y;
                 zMid = minBotRatio ? p0.z : p2.z;
-                xBot = !minBotRatio ? p0i.x : p2i.x;
-                yBot = !minBotRatio ? p0i.y : p2i.y;
+                xBot = !minBotRatio ? p0I.x : p2I.x;
+                yBot = !minBotRatio ? p0I.y : p2I.y;
                 zBot = !minBotRatio ? p0.z : p2.z;
             }
-            else if (p2i.y >= Math.Max(p0i.y, p1i.y))
+            else if (p2I.y >= Math.Max(p0I.y, p1I.y))
             {
-                xTop = p2i.x;
-                yTop = p2i.y;
+                xTop = p2I.x;
+                yTop = p2I.y;
                 zTop = p2.z;
                 
-                bool minBotRatio = p0i.y > p1i.y;
-                xMid = minBotRatio ? p0i.x : p1i.x;
-                yMid = minBotRatio ? p0i.y : p1i.y;
+                bool minBotRatio = p0I.y > p1I.y;
+                xMid = minBotRatio ? p0I.x : p1I.x;
+                yMid = minBotRatio ? p0I.y : p1I.y;
                 zMid = minBotRatio ? p0.z : p1.z;
-                xBot = !minBotRatio ? p0i.x : p1i.x;
-                yBot = !minBotRatio ? p0i.y : p1i.y;
+                xBot = !minBotRatio ? p0I.x : p1I.x;
+                yBot = !minBotRatio ? p0I.y : p1I.y;
                 zBot = !minBotRatio ? p0.z : p1.z;
             }
 
@@ -245,7 +200,7 @@ namespace RenderProject
             int xa = xBot; // Angled x
 
             int xMoveS = xTop > xBot ? 1 : -1;
-            int xMoveA = xMid > xBot ? 1 : -1; ;
+            int xMoveA = xMid > xBot ? 1 : -1;
 
             double zs = zBot;
             double zsStep = (zTop - zBot) / Math.Abs(yBot - yTop);
@@ -257,11 +212,7 @@ namespace RenderProject
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-<<<<<<< HEAD
-                HorisontalLine(s, a, image, color, zBuffer);
-=======
                 Line(s, a, image, colorD, zBuffer);
->>>>>>> origin/master
 
                 zs += zsStep;
                 za += zaStep;
@@ -289,7 +240,7 @@ namespace RenderProject
             shiftA = 0;
             stepA = 2 * dxa;
             
-            xMoveA = xTop > xMid ? 1 : -1; ;
+            xMoveA = xTop > xMid ? 1 : -1;
             
             za = zMid;
             zaStep = (zTop - zMid) / Math.Abs(yTop - yMid);
@@ -298,11 +249,7 @@ namespace RenderProject
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-<<<<<<< HEAD
-                HorisontalLine(s, a, image, color, zBuffer);
-=======
                 Line(s, a, image, colorD, zBuffer);
->>>>>>> origin/master
 
                 zs += zsStep;
                 za += zaStep;

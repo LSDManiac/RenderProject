@@ -11,7 +11,7 @@ namespace RenderProject
         public static void Main()
         {
             int gap = 50;
-            int depth = 500;
+            int depth = 10;
             int width = 1200;
             int height = 1200;
 
@@ -28,6 +28,9 @@ namespace RenderProject
             //Bitmap texture = new Bitmap(path + "head_diffuse.tga");
             Bitmap texture = new Bitmap(path + "african_head_SSS.jpg");
             Dictionary<Vector2I, double> zBuffer = new Dictionary<Vector2I, double>();
+
+            Matrix perspectiveMatrix = Matrix.IdentityMatrix(4);
+            perspectiveMatrix[3, 2] = -1 / (float)depth;
 
             for (int i = 1; i < model.faces.Count + 1; i++)
             {
@@ -49,7 +52,7 @@ namespace RenderProject
 
                 Drawing.ColorDelegate colorDel = delegate (Vector3 pos)
                 {
-
+                    /*
                     float a1 = 0, a2 = 0, a3 = 0;
                     float b1 = 0, b2 = 0, b3 = 0;
 
@@ -58,17 +61,24 @@ namespace RenderProject
                     double v = b1 * pos.x + b2 * pos.y + b3 * pos.z;
 
                     texture.GetPixel((int)(u * texture.Width), (int)(v * texture.Height));
+                    */
                     return Color.FromArgb(255, (int)(intence * 255 / 2), (int)(intence * 255), (int)(intence * 255));
                 };
                 
                 foreach (int vertex in face.vertexes)
                 {
-                    Vector3 vect = model.vertexes[vertex];
-                    vect.x = ((vect.x / 2 + 0.5f) * width + gap);
-                    vect.y = ((vect.y / 2 + 0.5f) * height + gap);
+                    Matrix matrix = new Matrix(4, 1);
+                    matrix[0, 0] = ((model.vertexes[vertex].x) * (width/2 - gap));
+                    matrix[1, 0] = ((model.vertexes[vertex].y) * (height/2 - gap));
+                    matrix[2, 0] = model.vertexes[vertex].z;
+                    matrix[3, 0] = 1;
 
-                    // Depth experiment here, trying to fix z buffer problem
-                    vect.z = (vect.z * depth);
+                    Matrix transaction = perspectiveMatrix * matrix;
+
+                    Vector3 vect = new Vector3(
+                        transaction[0,0]/transaction[3,0],
+                        transaction[1,0]/transaction[3,0],
+                        transaction[2,0]/transaction[3,0]);
 
                     drFace.points.Add(vect);
                     drFace.normals.Add(model.normalsVertexes[vertex]);

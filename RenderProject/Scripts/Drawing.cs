@@ -38,6 +38,20 @@ namespace RenderProject
             b = temp;
         }
 
+        private static void SetPixel(int x, int y, double z, Color color, Bitmap image, Dictionary<Vector2I, double> zBuffer)
+        {
+            if (!(x >= image.Width / 2 || x <= -image.Width / 2 || y >= image.Height / 2 || y <= -image.Height / 2))
+            {
+                Vector2I curPoint = new Vector2I(x, y);
+                if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= z)
+                {
+                    image.SetPixel(x + image.Width/2, y + image.Height/2, color);
+                    if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = z;
+                    else zBuffer.Add(curPoint, z);
+                }
+            }
+        }
+
         public static void Line(Vector3 p0, Vector3 p1,
                                 Bitmap image, ColorDelegate colorD,
                                 Dictionary<Vector2I, double> zBuffer)
@@ -85,29 +99,11 @@ namespace RenderProject
             {
                 if (swapped)
                 {
-                    if (!(y >= image.Width || y < 0 || x >= image.Height || x < 0))
-                    {
-                        Vector2I curPoint = new Vector2I(y, x);
-                        if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= curZ)
-                        {
-                            image.SetPixel(y, x, colorD(new Vector3(y, x, curZ)));
-                            if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = curZ;
-                            else zBuffer.Add(curPoint, curZ);
-                        }
-                    }
+                    SetPixel(y, x, curZ, colorD(new Vector3(y, x, curZ)), image, zBuffer);
                 }
                 else
                 {
-                    if (!(x >= image.Width || x < 0 || y >= image.Height || y < 0))
-                    {
-                        Vector2I curPoint = new Vector2I(x, y);
-                        if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= curZ)
-                        {
-                            image.SetPixel(x, y, colorD(new Vector3(x, y, curZ)));
-                            if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = curZ;
-                            else zBuffer.Add(curPoint, curZ);
-                        }
-                    }
+                    SetPixel(x, y, curZ, colorD(new Vector3(x, y, curZ)), image, zBuffer);
                 }
 
                 shift += step;

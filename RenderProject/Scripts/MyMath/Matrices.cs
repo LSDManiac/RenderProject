@@ -8,14 +8,29 @@ namespace RenderProject.MyMath
         {
             this.rows = rows;
             this.columns = columns;
-            _values = new float[rows * columns];
+            _values = new double[rows * columns];
+        }
+
+        public static Matrix IdentityMatrix(int size)
+        {
+            Matrix newM  = new Matrix(size, size);
+
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    newM[i, j] = i == j ? 1 : 0;
+                }
+            }
+
+            return newM;
         }
 
         public int rows { get; }
         public int columns { get; }
-        private readonly float[] _values;
+        private readonly double[] _values;
 
-        public float this[int i, int j]
+        public double this[int i, int j]
         {
             get { return _values[i * columns + j]; }
             set { _values[i * columns + j] = value; }
@@ -38,7 +53,7 @@ namespace RenderProject.MyMath
             {
                 for (int j = 0; j < newM.columns; j++)
                 {
-                    float result = 0;
+                    double result = 0;
                     for (int k = 0; k < m; k++)
                     {
                         result += m1[i, k] * m2[k, j];
@@ -74,7 +89,7 @@ namespace RenderProject.MyMath
             return newM;
         }
 
-        public static Matrix operator *(Matrix m, float k)
+        public static Matrix operator *(Matrix m, double k)
         {
             Matrix newM = new Matrix(m.rows, m.columns);
 
@@ -89,7 +104,7 @@ namespace RenderProject.MyMath
             return newM;
         }
 
-        public static Matrix operator *(float k, Matrix m)
+        public static Matrix operator *(double k, Matrix m)
         {
             return m * k;
         }

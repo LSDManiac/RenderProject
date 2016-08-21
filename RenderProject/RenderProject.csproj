@@ -54,6 +54,7 @@
     <Compile Include="Scripts\Drawing.cs" />
     <Compile Include="Scripts\Graphics\Material.cs" />
     <Compile Include="Scripts\Graphics\Model.cs" />
+    <Compile Include="Scripts\MyMath\Matrices.cs" />
     <Compile Include="Scripts\MyMath\MyMath.cs" />
     <Compile Include="Scripts\Render.cs" />
   </ItemGroup>

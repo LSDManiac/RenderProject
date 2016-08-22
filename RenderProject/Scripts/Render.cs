@@ -15,13 +15,14 @@ namespace RenderProject
             int depth = 10;
             int width = 1200;
             int height = 1200;
-            
+
             Bitmap bmp = new Bitmap(width + gap, height + gap);
 
             Model model = new Model();
 
             //             D:\\Projects\\RenderProject\\RenderProject\\Models
-            string path = "D:\\Projects\\RenderProject\\RenderProject\\Models\\";
+            //string path = "D:\\Projects\\RenderProject\\RenderProject\\Models\\";
+            string path = "C:\\Projects\\RenderProject\\RenderProject\\Models\\";
             //string path = "E:\\Projects\\RenderProject\\RenderProject\\RenderProject\\Models\\";
 
             model.Load(path + "head.obj");
@@ -32,6 +33,9 @@ namespace RenderProject
 
             Matrix perspectiveMatrix = Matrix.IdentityMatrix(4);
             perspectiveMatrix[3, 2] = -1 / (float)depth;
+
+            Drawing curDrawing = new Drawing();
+            curDrawing.Init(bmp, zBuffer);
 
             for (int i = 1; i < model.faces.Count + 1; i++)
             {
@@ -50,30 +54,30 @@ namespace RenderProject
                 }
 
                 Drawing.DrawFace drFace = new Drawing.DrawFace();
-                
+
                 foreach (int vertex in face.vertexes)
                 {
                     Matrix matrix = new Matrix(4, 1);
-                    matrix[0, 0] = ((model.vertexes[vertex].x) * (width/2 - gap));
-                    matrix[1, 0] = ((model.vertexes[vertex].y) * (height/2 - gap));
+                    matrix[0, 0] = ((model.vertexes[vertex].x) * (width / 2 - gap));
+                    matrix[1, 0] = ((model.vertexes[vertex].y) * (height / 2 - gap));
                     matrix[2, 0] = model.vertexes[vertex].z;
                     matrix[3, 0] = 1;
 
                     Matrix transaction = perspectiveMatrix * matrix;
 
                     Vector3 vect = new Vector3(
-                        transaction[0,0]/transaction[3,0],
-                        transaction[1,0]/transaction[3,0],
-                        transaction[2,0]/transaction[3,0]);
+                        transaction[0, 0] / transaction[3, 0],
+                        transaction[1, 0] / transaction[3, 0],
+                        transaction[2, 0] / transaction[3, 0]);
 
                     drFace.points.Add(vect);
                     drFace.normals.Add(model.normalsVertexes[vertex]);
                     drFace.textures.Add(model.textureVertexes[vertex]);
                 }
-                
+
                 TextureColorPerformer colorPerformer = new TextureColorPerformer(texture, drFace.points[0], drFace.points[1], drFace.points[2], drFace.textures[0], drFace.textures[1], drFace.textures[2]);
 
-                Drawing.Polygon(drFace, bmp, colorPerformer, zBuffer);
+                curDrawing.Polygon(drFace, colorPerformer);
             }
 
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);

@@ -6,8 +6,11 @@ using RenderProject.MyMath;
 
 namespace RenderProject
 {
-    public static class Drawing
+    public class Drawing
     {
+
+
+
         public class DrawFace
         {
             public DrawFace()
@@ -20,42 +23,54 @@ namespace RenderProject
             public List<Vector3> points;
             public List<Vector3> textures;
             public List<Vector3> normals;
+
+            public Bitmap texture;
         }
 
         public delegate Color ColorDelegate(Vector3 pos);
         public delegate Color PixelColorDelegate(Vector2I pos);
 
-        public static void Swap(ref int a, ref int b)
+        private Bitmap _image;
+        private Dictionary<Vector2I, double> _zBuffer;
+
+        public void Init(Bitmap image, Dictionary<Vector2I, double> zBuffer)
+        {
+            _image = image;
+            _zBuffer = zBuffer;
+        }
+
+
+
+        private void Swap(ref int a, ref int b)
         {
             int temp = a;
             a = b;
             b = temp;
         }
 
-        public static void Swap(ref double a, ref double b)
+        private void Swap(ref double a, ref double b)
         {
             double temp = a;
             a = b;
             b = temp;
         }
 
-        private static void SetPixel(int x, int y, double z, Color color, Bitmap image, Dictionary<Vector2I, double> zBuffer)
+        private void SetPixel(int x, int y, double z, Color color)
         {
-            if (!(x >= image.Width / 2 || x <= -image.Width / 2 || y >= image.Height / 2 || y <= -image.Height / 2))
+            if (!(x >= _image.Width / 2 || x <= -_image.Width / 2 || y >= _image.Height / 2 || y <= -_image.Height / 2))
             {
                 Vector2I curPoint = new Vector2I(x, y);
-                if (!zBuffer.ContainsKey(curPoint) || zBuffer[curPoint] <= z)
+                if (!_zBuffer.ContainsKey(curPoint) || _zBuffer[curPoint] <= z)
                 {
-                    image.SetPixel(x + image.Width/2, y + image.Height/2, color);
-                    if (zBuffer.ContainsKey(curPoint)) zBuffer[curPoint] = z;
-                    else zBuffer.Add(curPoint, z);
+                    _image.SetPixel(x + _image.Width/2, y + _image.Height/2, color);
+                    if (_zBuffer.ContainsKey(curPoint)) _zBuffer[curPoint] = z;
+                    else _zBuffer.Add(curPoint, z);
                 }
             }
         }
 
-        public static void Line(Vector3 p0, Vector3 p1,
-                                Bitmap image, ColorPerformer colorP,
-                                Dictionary<Vector2I, double> zBuffer)
+        public void Line(Vector3 p0, Vector3 p1,
+                                ColorPerformer colorP)
         {
             Vector2I p0I = p0;
             Vector2I p1I = p1;
@@ -100,11 +115,11 @@ namespace RenderProject
             {
                 if (swapped)
                 {
-                    SetPixel(y, x, curZ, colorP.GetColor(new Vector3(y, x, curZ)), image, zBuffer);
+                    SetPixel(y, x, curZ, colorP.GetColor(new Vector3(y, x, curZ)));
                 }
                 else
                 {
-                    SetPixel(x, y, curZ, colorP.GetColor(new Vector3(x, y, curZ)), image, zBuffer);
+                    SetPixel(x, y, curZ, colorP.GetColor(new Vector3(x, y, curZ)));
                 }
 
                 shift += step;
@@ -119,73 +134,64 @@ namespace RenderProject
             }
         }
         
-        public static void Polygon(DrawFace face,
-                                   Bitmap image, ColorPerformer colorP,
-                                   Dictionary<Vector2I, double> zBuffer)
+        public void Polygon(DrawFace face,
+                                   ColorPerformer colorP)
         {
             // Splits polygon into triangles
             for (int i = 2; i < face.points.Count; i++)
             {
-                Triangle(face.points[0], face.points[i - 1], face.points[i], image, colorP, zBuffer);
+                Triangle(face.points[0], face.points[i - 1], face.points[i], colorP);
             }
         }
 
-        public static void Triangle(Vector3 p0, Vector3 p1, Vector3 p2,
-                                    Bitmap image, ColorPerformer colorP,
-                                    Dictionary<Vector2I, double> zBuffer)
+        public void Triangle(Vector3 p0, Vector3 p1, Vector3 p2,
+                                    ColorPerformer colorP)
         {
             Vector2I p0I = new Vector2I((int)Math.Round(p0.x), (int)Math.Round(p0.y));
             Vector2I p1I = new Vector2I((int)Math.Round(p1.x), (int)Math.Round(p1.y));
             Vector2I p2I = new Vector2I((int)Math.Round(p2.x), (int)Math.Round(p2.y));
-            int xTop = 0, yTop = 0, xBot = 0, yBot = 0, xMid = 0, yMid = 0;
+
+            Vector2I mid, bot;
+            Vector2I top = mid = bot = new Vector2I(0,0);
             double zTop = 0, zMid = 0, zBot = 0;
             if (p0I.y >= Math.Max(p1I.y, p2I.y))
             {
-                xTop = p0I.x;
-                yTop = p0I.y;
+                top = p0I;
                 zTop = p0.z;
                 
                 bool minBotRatio = p1I.y > p2I.y;
-                xMid = minBotRatio ? p1I.x : p2I.x;
-                yMid = minBotRatio ? p1I.y : p2I.y;
+                mid = minBotRatio ? p1I : p2I;
                 zMid = minBotRatio ? p1.z : p2.z;
-                xBot = !minBotRatio ? p1I.x : p2I.x;
-                yBot = !minBotRatio ? p1I.y : p2I.y;
+                bot = !minBotRatio ? p1I : p2I;
                 zBot = !minBotRatio ? p1.z : p2.z;
             }
             else if (p1I.y >= Math.Max(p0I.y, p2I.y))
             {
-                xTop = p1I.x;
-                yTop = p1I.y;
+                top = p1I;
                 zTop = p1.z;
 
                 bool minBotRatio = p0I.y > p2I.y;
-                xMid = minBotRatio ? p0I.x : p2I.x;
-                yMid = minBotRatio ? p0I.y : p2I.y;
+                mid = minBotRatio ? p0I : p2I;
                 zMid = minBotRatio ? p0.z : p2.z;
-                xBot = !minBotRatio ? p0I.x : p2I.x;
-                yBot = !minBotRatio ? p0I.y : p2I.y;
+                bot = !minBotRatio ? p0I : p2I;
                 zBot = !minBotRatio ? p0.z : p2.z;
             }
             else if (p2I.y >= Math.Max(p0I.y, p1I.y))
             {
-                xTop = p2I.x;
-                yTop = p2I.y;
+                top = p2I;
                 zTop = p2.z;
                 
                 bool minBotRatio = p0I.y > p1I.y;
-                xMid = minBotRatio ? p0I.x : p1I.x;
-                yMid = minBotRatio ? p0I.y : p1I.y;
+                mid = minBotRatio ? p0I : p1I;
                 zMid = minBotRatio ? p0.z : p1.z;
-                xBot = !minBotRatio ? p0I.x : p1I.x;
-                yBot = !minBotRatio ? p0I.y : p1I.y;
+                bot = !minBotRatio ? p0I : p1I;
                 zBot = !minBotRatio ? p0.z : p1.z;
             }
 
-            int dxs = Math.Abs(xBot - xTop);
-            int dys = Math.Abs(yBot - yTop);
-            int dxa = Math.Abs(xBot - xMid);
-            int dya = Math.Abs(yBot - yMid);
+            int dxs = Math.Abs(bot.x - top.x);
+            int dys = Math.Abs(bot.y - top.y);
+            int dxa = Math.Abs(bot.x - mid.x);
+            int dya = Math.Abs(bot.y - mid.y);
 
             int shiftS = 0;
             int stepS = 2 * dxs;
@@ -193,23 +199,23 @@ namespace RenderProject
             int shiftA = 0;
             int stepA = 2 * dxa;
 
-            int xs = xBot; // Strait x
-            int xa = xBot; // Angled x
+            int xs = bot.x; // Strait x
+            int xa = bot.x; // Angled x
 
-            int xMoveS = xTop > xBot ? 1 : -1;
-            int xMoveA = xMid > xBot ? 1 : -1;
+            int xMoveS = top.x > bot.x ? 1 : -1;
+            int xMoveA = mid.x > bot.x ? 1 : -1;
 
             double zs = zBot;
-            double zsStep = (zTop - zBot) / Math.Abs(yBot - yTop);
+            double zsStep = (zTop - zBot) / Math.Abs(bot.y - top.y);
 
             double za = zBot;
-            double zaStep = (zMid - zBot) / Math.Abs(yBot - yMid);
+            double zaStep = (zMid - zBot) / Math.Abs(bot.y - mid.y);
             
-            for (int y = yBot; y < yMid; y++)
+            for (int y = bot.y; y < mid.y; y++)
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-                Line(s, a, image, colorP, zBuffer);
+                Line(s, a, colorP);
 
                 zs += zsStep;
                 za += zaStep;
@@ -230,23 +236,23 @@ namespace RenderProject
                 }
             }
 
-            dxa = Math.Abs(xTop - xMid);
-            dya = Math.Abs(yTop - yMid);
-            xa = xMid;
+            dxa = Math.Abs(top.x - mid.x);
+            dya = Math.Abs(top.y - mid.y);
+            xa = mid.x;
 
             shiftA = 0;
             stepA = 2 * dxa;
             
-            xMoveA = xTop > xMid ? 1 : -1;
+            xMoveA = top.x > mid.x ? 1 : -1;
             
             za = zMid;
-            zaStep = (zTop - zMid) / Math.Abs(yTop - yMid);
+            zaStep = (zTop - zMid) / Math.Abs(top.y - mid.y);
 
-            for (int y = yMid; y <= yTop; y++)
+            for (int y = mid.y; y <= top.y; y++)
             {
                 Vector3 s = new Vector3(xs, y, zs);
                 Vector3 a = new Vector3(xa, y, za);
-                Line(s, a, image, colorP, zBuffer);
+                Line(s, a, colorP);
 
                 zs += zsStep;
                 za += zaStep;
@@ -266,10 +272,6 @@ namespace RenderProject
                     xa += xMoveA;
                 }
             }
-            //Line(p0, p1, image, delegate { return Color.Red; }, new Dictionary<Vector2i, double>());
-            //Line(p0, p2, image, delegate { return Color.Red; }, new Dictionary<Vector2i, double>());
-            //Line(p1, p2, image, delegate { return Color.Red; }, new Dictionary<Vector2i, double>());
         }
-
     }
 }

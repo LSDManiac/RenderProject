@@ -137,7 +137,6 @@ namespace RenderProject
         public void Polygon(DrawFace face,
                                    ColorPerformer colorP)
         {
-            // Splits polygon into triangles
             for (int i = 2; i < face.points.Count; i++)
             {
                 Triangle(face.points[0], face.points[i - 1], face.points[i], colorP);

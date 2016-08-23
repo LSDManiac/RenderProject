@@ -39,29 +39,31 @@
 
         public static implicit operator Vector2(Vector2I v)
         {
-            return new Vector2()
-            {
-                x = v.x,
-                y = v.y
-            };
+            return new Vector2(v.x, v.y);
         }
 
         public static implicit operator Vector2(Vector3 v)
         {
-            return new Vector2()
-            {
-                x = v.x,
-                y = v.y
-            };
+            return new Vector2(v.x, v.y);
         }
 
         public static implicit operator Vector2(Vector3I v)
         {
-            return new Vector2()
-            {
-                x = v.x,
-                y = v.y
-            };
+            return new Vector2(v.x, v.y);
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public Vector2(double x) : this(x, 0)
+        {
+        }
+
+        public Vector2(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
         }
 
         #endregion
@@ -106,29 +108,17 @@
 
         public static implicit operator Vector2I(Vector2 v)
         {
-            return new Vector2I()
-            {
-                x = (int)v.x,
-                y = (int)v.y
-            };
+            return new Vector2I((int)v.x, (int)v.y);
         }
 
         public static implicit operator Vector2I(Vector3 v)
         {
-            return new Vector2I()
-            {
-                x = (int)v.x,
-                y = (int)v.y
-            };
+            return new Vector2I((int)v.x, (int)v.y);
         }
 
         public static implicit operator Vector2I(Vector3I v)
         {
-            return new Vector2I()
-            {
-                x = v.x,
-                y = v.y
-            };
+            return new Vector2I(v.x, v.y);
         }
 
         #endregion
@@ -148,7 +138,7 @@
     public struct Vector3
     {
 
-        private const double NormalTolerance = 0.00000001;
+        private const double NORMAL_TOLERANCE = 0.00000001;
 
         public double x, y, z;
 
@@ -186,60 +176,34 @@
 
         public static implicit operator Vector3(Vector2 v)
         {
-            return new Vector3()
-            {
-                x = v.x,
-                y = v.y,
-                z = 0
-            };
+            return new Vector3(v.x, v.y);
         }
 
         public static implicit operator Vector3(Vector2I v)
         {
-            return new Vector3()
-            {
-                x = v.x,
-                y = v.y,
-                z = 0
-            };
+            return new Vector3(v.x, v.y);
         }
 
         public static implicit operator Vector3(Vector3I v)
         {
-            return new Vector3()
-            {
-                x = v.x,
-                y = v.y,
-                z = v.z
-            };
+            return new Vector3(v.x, v.y, v.z);
         }
 
         public static implicit operator Vector3(Quaternion v)
         {
-            return new Vector3()
-            {
-                x = v.x,
-                y = v.y,
-                z = v.z
-            };
+            return new Vector3(v.x, v.y, v.z);
         }
 
         #endregion
 
         #region Constructors
 
-        public Vector3(double x)
+        public Vector3(double x) : this(x, 0, 0)
         {
-            this.x = x;
-            y = 0;
-            z = 0;
         }
 
-        public Vector3(double x, double y)
+        public Vector3(double x, double y) : this(x, y, 0)
         {
-            this.x = x;
-            this.y = y;
-            z = 0;
         }
 
         public Vector3(double x, double y, double z)
@@ -275,7 +239,7 @@
         public void Normalize()
         {
             double module = x * x + y * y + z * z;
-            if (System.Math.Abs(module - 1) < NormalTolerance) return;
+            if (System.Math.Abs(module - 1) < NORMAL_TOLERANCE) return;
             module = System.Math.Sqrt(module);
             x = (float)(x / module);
             y = (float)(y / module);
@@ -324,32 +288,36 @@
 
         public static implicit operator Vector3I(Vector2 v)
         {
-            return new Vector3I()
-            {
-                x = (int)v.x,
-                y = (int)v.y,
-                z = 0
-            };
+            return new Vector3I((int)v.x, (int)v.y);
         }
 
         public static implicit operator Vector3I(Vector2I v)
         {
-            return new Vector3I()
-            {
-                x = v.x,
-                y = v.y,
-                z = 0
-            };
+            return new Vector3I(v.x, v.y);
         }
 
         public static implicit operator Vector3I(Vector3 v)
         {
-            return new Vector3I()
-            {
-                x = (int)v.x,
-                y = (int)v.y,
-                z = (int)v.z
-            };
+            return new Vector3I((int)v.x, (int)v.y, (int)v.z);
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public Vector3I(int x) : this(x, 0 ,0)
+        {
+        }
+
+        public Vector3I(int x,int y) : this(x,y,0)
+        {
+        }
+
+        public Vector3I(int x, int y, int z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         #endregion
@@ -394,63 +362,33 @@
 
         public static implicit operator Quaternion(Vector2 v)
         {
-            return new Quaternion()
-            {
-                x = v.x,
-                y = v.y,
-                z = 0,
-                w = 0
-            };
+            return new Quaternion(v.x, v.y);
         }
 
         public static implicit operator Quaternion(Vector2I v)
         {
-            return new Quaternion()
-            {
-                x = v.x,
-                y = v.y,
-                z = 0,
-                w = 0
-            };
+            return new Quaternion(v.x, v.y);
         }
 
         public static implicit operator Quaternion(Vector3I v)
         {
-            return new Quaternion()
-            {
-                x = v.x,
-                y = v.y,
-                z = v.z,
-                w = 0
-            };
+            return new Quaternion(v.x, v.y, v.z);
         }
 
         #endregion
 
         #region Constructors
 
-        public Quaternion(double x)
+        public Quaternion(double x) : this(x, 0, 0, 0)
         {
-            this.x = x;
-            y = 0;
-            z = 0;
-            w = 0;
         }
 
-        public Quaternion(double x, double y)
+        public Quaternion(double x, double y) : this(x, y, 0, 0)
         {
-            this.x = x;
-            this.y = y;
-            z = 0;
-            w = 0;
         }
 
-        public Quaternion(double x, double y, double z)
+        public Quaternion(double x, double y, double z) : this(x, y, z, 0)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            w = 0;
         }
 
         public Quaternion(double x, double y, double z, double w)
